@@ -33,15 +33,15 @@ MCP follows a client-server architecture:
    - **Tools**: Functions that can be invoked to perform actions (code)
    - **Prompts**: Pre-configured prompt templates that can be used to guide interactions
 
-MCP Client also has 3 primitives: 
-- Sampling: Allowing MCP Server to request Language Model completion from the Clients LLM and not include SDK on their own. 
-- Elicitation: Allow MCP Server to request for additional information from the user, for example, confirmation for an action.
-- Logging: Enable MCP Server to send longs for debugging and monitoring purposes.
-
 To make a distinction between a MCP Server and MCP Client, you can think of MCP Servers as REST API's but for the MCP Clients. The Host has the LLM and <em>n</em> amount of MCP Clients, but the Client handles the connection to the MCP Server, you can think of MCP Client as the front-end. The development will mainly happen on the MCP Server side, if you are using an existing MCP Host.
 
 The magic happens when you connect these pieces. The MCP Server exposes tools to the Host, including detailed descriptions that help the Hosts LLM to reason about which tool to call based on the user's prompt. 
 Instead of writing custom integration code for each data source, you write one MCP server, and any MCP-compatible client can use it. This dramatically reduces complexity and increases reusability.
+
+MCP Client also has 3 primitives: 
+- **Sampling**: Allowing MCP Server to request Language Model completion from the Clients LLM and not include SDK on their own. 
+- **Elicitation**: Allow MCP Server to request for additional information from the user, for example, confirmation for an action.
+- **Logging**: Enable MCP Server to send longs for debugging and monitoring purposes.
 
 I can't cover every detail about the MCP architecture, but you can read more about it [here](https://modelcontextprotocol.io/docs/learn/architecture).
 
@@ -107,10 +107,11 @@ Now that we understand what MCP can do, let's explore how it actually works at a
 
 ### Transport Layer 
 
+Transports in MCP is responsible of communication related mechanics between a client and a server.
 MCP supports multiple transport mechanisms:
 
   - **stdio**: Communication through standard input/output (great for local processes)
-  - **Streamable HTTP**: Recommended HTTP transport that supports bidirectional, streaming communication using HTTP POST/GET, optionally with Server‑Sent Events (SSE) under the hood
+  - **Streamable HTTP**: Recommended HTTP transport that supports bidirectional, streaming communication using HTTP POST/GET, optionally with Server‑Sent Events (SSE).
   - **HTTP+SSE (deprecated)**: Older HTTP transport from an earlier protocol version, kept only for backwards compatibility with legacy clients/servers
 
 ### JSON-RPC: The Communication Protocol
