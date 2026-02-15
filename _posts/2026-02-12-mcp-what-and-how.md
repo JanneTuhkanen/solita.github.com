@@ -9,10 +9,10 @@ tags:
   - MCP
   - Language Models
 ---
+ 
+I've been working with FunctionAI MCP Servers since last autumn, and it's been fun to work with such an interesting technology which could really be the first versions of a standardized framework for how we make queries to data sources using a large language model (LLM). LLM's are useful, when a search logic needs to be more than pattern matching and profiled data. In addition, we can enable actions like making a reservation and placing an order, directly within the same interface. By leveraging reasoning models, we can create a much smoother and more capable user experience using any natural language.
 
-I've been working with FunctionAI MCP Servers since last autumn and it's been fun to work with such an interesting technology, which could really be the first versions of a standardized framework for how we make queries to data sources using a large language model (LLM). LLM's are useful, when a search logic needs to be more than pattern matching and profiled data. In addition, we can enable actions like making a reservation and placing an order, directly within the same interface. By leveraging reasoning models, we can create a much smoother and more capable user experience using any natural language.
-
-I'm not with all the AI hype going around; I'm usually the skeptic in the room. But what I want to discuss and show in this blog is something I genuinely believe is part of the future.
+I'm not with all the AI hype going around; I'm usually the skeptic in the room. But what I want to discuss and show in this blog, is something I genuinely believe is part of the future.
 
 ## Introduction: What is MCP?
 
@@ -22,19 +22,23 @@ Enter the **Model Context Protocol (MCP)** an open protocol that standardizes ho
 
 MCP was developed by Anthropic and released as an open standard, designed to solve the fragmentation problem in AI integrations. Instead of building custom integrations for every data source you want to connect to your LLM, MCP provides a unified way for applications to expose their capabilities to AI systems.
 
-## The Simple Formula: LM + Data Source = MCP Application
+### Architecture Overview
 
-At its core, MCP has three components:
+MCP follows a client-server architecture:
 
-- **MCP Host**: AI application that provides an LLM and manages MCP Clients
-- **MCP Client**: The application that orchestrates communication between the LLM and MCP servers
-- **MCP Server**: A standardized interface that exposes data, tools, or capabilities to the LLM
+1. **MCP Host**: AI application that provides an LLM and manages MCP Clients.
+2. **MCP Client**: The Client is connected to an MCP Server and provides the context to the Host
+3. **MCP Server**: A standardized interface that exposes capabilities to MCP Client:
+   - **Resources**: Data or content that can be read (files, database records, API responses)
+   - **Tools**: Functions that can be invoked to perform actions (code)
+   - **Prompts**: Pre-configured prompt templates that can be used to guide interactions
 
-To make a distinction between a MCP Server and MCP Client, you can think of MCP Servers as REST API's but for the MCP Clients. The MCP Client has the LLM and handles the connection to the MCP Server, you can think of MCP Client as the front-end. 
+To make a distinction between a MCP Server and MCP Client, you can think of MCP Servers as REST API's but for the MCP Clients. The Host has the LLM and <em>n</em> amount of MCP Clients, but the Client handles the connection to the MCP Server, you can think of MCP Client as the front-end. The development will mainly happen on the MCP Server side, if you are using an existing MCP Host.
 
-The magic happens when you connect these pieces. The MCP server wraps your data source (database, API, file system, etc.) and exposes it through a standardized protocol. The LLM can then interact with this data naturally, asking questions, retrieving information, or performing actions, all through a uniform interface. The MCP Server exposes tools to the Client LM, including detailed descriptions that help the model reason about which tool to call based on the user's prompt. 
-
+The magic happens when you connect these pieces. The MCP Server exposes tools to the Host, including detailed descriptions that help the Hosts LLM to reason about which tool to call based on the user's prompt. 
 Instead of writing custom integration code for each data source, you write one MCP server, and any MCP-compatible client can use it. This dramatically reduces complexity and increases reusability.
+
+I can't cover every detail about the MCP architecture, but you can read more about it [here](https://modelcontextprotocol.io/docs/learn/architecture).
 
 ## Real-World Applications: What Can You Build?
 
@@ -44,14 +48,14 @@ The possibilities with MCP are extensive. Here are some compelling use cases:
 Connect your LLM to internal documentation, wikis, or knowledge bases. Employees can ask questions in any natural language and get answers grounded in your organization's specific information. Solita's FunctionAI for example.
 
 ### **Flight Information System** *(Our Example)*
-In this blog post, we'll explore a practical example: a flight information system. We'll create an MCP server that provides access to flight data. This demonstrates how MCP can transform static data into an interactive, queryable service that responds to natural language.
+In this blog post, we'll explore a practical example: a flight information system. We'll have a look at an MCP server that provides access to flight data. This demonstrates how MCP can transform static data into an interactive, queryable service that responds to natural language.
 
 ### **Multi-Source Intelligence**
 The real power emerges when you connect multiple plugin-like MCP servers simultaneously. Imagine an assistant that can query your calendar, read/create tickets from your favorite project management tool, and update documentation, all in a single conversation, providing synthesized insights across systems.
 
 ## Implementation: Building an MCP Server
 
-Let's walk through building a practical MCP server in Python. We'll create a flight information system that exposes flight data to LLM's.
+Let's walk through building a practical MCP server in Python. Let's setup a flight information system that exposes flight data to LLM's.
 
 ### Setting Up the Environment
 
@@ -96,19 +100,6 @@ What happens, it gets the full JSON as a response and reasons with our prompt th
 
 Now that we understand what MCP can do, let's explore how it actually works at a technical level.
 
-### Architecture Overview
-
-MCP follows a client-server architecture:
-
-1. **MCP Host**: The AI application that coordinates and manages clients
-
-2. **MCP Client**: The Client is connected to an MCP Server and provides the context to the Host
-
-3. **MCP Server**: Exposes capabilities to MCP Client:
-   - **Resources**: Data or content that can be read (files, database records, API responses)
-   - **Tools**: Functions that can be invoked to perform actions (code)
-   - **Prompts**: Pre-configured prompt templates that can be used to guide interactions
-
 ### Transport Layer 
 
 MCP supports multiple transport mechanisms:
@@ -116,8 +107,6 @@ MCP supports multiple transport mechanisms:
   - **stdio**: Communication through standard input/output (great for local processes)
   - **Streamable HTTP**: Recommended HTTP transport that supports bidirectional, streaming communication using HTTP POST/GET, optionally with Server‑Sent Events (SSE) under the hood
   - **HTTP+SSE (deprecated)**: Older HTTP transport from an earlier protocol version, kept only for backwards compatibility with legacy clients/servers
-
-You can read more about MCP architecture [here](https://modelcontextprotocol.io/docs/learn/architecture).
 
 ### JSON-RPC: The Communication Protocol
 
