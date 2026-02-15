@@ -28,10 +28,15 @@ MCP follows a client-server architecture:
 
 1. **MCP Host**: AI application that provides an LLM and manages MCP Clients.
 2. **MCP Client**: The Client is connected to an MCP Server and provides the context to the Host
-3. **MCP Server**: A standardized interface that exposes capabilities to MCP Client:
+3. **MCP Server**: A standardized interface that exposes capabilities to MCP Client using following primitives:
    - **Resources**: Data or content that can be read (files, database records, API responses)
    - **Tools**: Functions that can be invoked to perform actions (code)
    - **Prompts**: Pre-configured prompt templates that can be used to guide interactions
+
+MCP Client also has 3 primitives: 
+- Sampling: Allowing MCP Server to request Language Model completion from the Clients LLM and not include SDK on their own. 
+- Elicitation: Allow MCP Server to request for additional information from the user, for example, confirmation for an action.
+- Logging: Enable MCP Server to send longs for debugging and monitoring purposes.
 
 To make a distinction between a MCP Server and MCP Client, you can think of MCP Servers as REST API's but for the MCP Clients. The Host has the LLM and <em>n</em> amount of MCP Clients, but the Client handles the connection to the MCP Server, you can think of MCP Client as the front-end. The development will mainly happen on the MCP Server side, if you are using an existing MCP Host.
 
@@ -44,18 +49,18 @@ I can't cover every detail about the MCP architecture, but you can read more abo
 
 The possibilities with MCP are extensive. Here are some compelling use cases:
 
-### **Knowledge Base Integration**
+### Knowledge Base Integration
 Connect your LLM to internal documentation, wikis, or knowledge bases. Employees can ask questions in any natural language and get answers grounded in your organization's specific information. Solita's FunctionAI for example.
 
-### **Flight Information System** *(Our Example)*
+### Flight Information System *(Our Example)*
 In this blog post, we'll explore a practical example: a flight information system. We'll have a look at an MCP server that provides access to flight data. This demonstrates how MCP can transform static data into an interactive, queryable service that responds to natural language.
 
-### **Multi-Source Intelligence**
+### Multi-Source Intelligence
 The real power emerges when you connect multiple plugin-like MCP servers simultaneously. Imagine an assistant that can query your calendar, read/create tickets from your favorite project management tool, and update documentation, all in a single conversation, providing synthesized insights across systems.
 
-## Implementation: Building an MCP Server
+## Implementation: Flights MCP Server
 
-Let's walk through building a practical MCP server in Python. Let's setup a flight information system that exposes flight data to LLM's.
+Let's walk through a practical MCP server in Python. Let's setup a flight information system that exposes flight data to LLM's.
 
 ### Setting Up the Environment
 
