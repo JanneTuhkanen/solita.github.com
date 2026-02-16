@@ -3,16 +3,16 @@ layout: post
 title: "MCP: Connecting Language Models to the Real World"
 author: jannetuhkanen
 excerpt: >
-  In this blog we go through what Model Context Protocol is and how to implement it. 
+  In this blog post, we'll go through what the Model Context Protocol is and how to implement it.
 tags:
   - AI
   - MCP
   - Language Models
 ---
  
-I've been working with FunctionAI MCP Servers since last autumn, and it's been fun to work with such an interesting technology which could really be the first versions of a standardized framework for how we make queries to data sources using a large language model (LLM). LLM's are useful, when a search logic needs to be more than pattern matching and profiled data. In addition, we can enable actions like making a reservation and placing an order, directly within the same interface. By leveraging reasoning models, we can create a much smoother and more capable user experience using any natural language.
+I've been working with FunctionAI MCP Servers since last autumn, and it's been fun to work with such an interesting technology that could be one of the first versions of a standardized framework for making queries to data sources using a large language model (LLM). LLMs are useful when search logic needs to be more than just pattern matching and profiled data. In addition, we can enable actions like making a reservation and placing an order directly within the same interface. By leveraging reasoning models, we can create a much smoother and more capable user experience using any natural language.
 
-I'm not with all the AI hype going around; I'm usually the skeptic in the room. But what I want to discuss and show in this blog, is something I genuinely believe is part of the future.
+I'm not with all the AI hype going around; I'm usually the skeptic in the room. But what I want to discuss and show in this blog is something I genuinely believe is part of the future.
 
 ## Introduction: What is MCP?
 
@@ -28,7 +28,7 @@ MCP follows a client-server architecture:
 
 1. **MCP Host**: AI application that provides an LLM and manages MCP Clients.
 2. **MCP Client**: The Client is connected to an MCP Server and provides the context to the Host
-3. **MCP Server**: A standardized interface that exposes capabilities to MCP Client using following primitives:
+3. **MCP Server**: A standardized interface that exposes primitives to MCP Client which are capabilities that the Server provides:
    - **Resources**: Data or content that can be read (files, database records, API responses)
    - **Tools**: Functions that can be invoked to perform actions (code)
    - **Prompts**: Pre-configured prompt templates that can be used to guide interactions
